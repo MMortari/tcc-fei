@@ -27,10 +27,9 @@ export default new TrucksModel();
 export interface Truck {
   id: string;
   name: string;
-  color: string;
+  color?: string;
+  weight: string;
+  coefficient: string;
 }
 
-export interface CreateTruck {
-  name: string;
-  color: string;
-}
+export type CreateTruck = Omit<Truck, 'id'>;

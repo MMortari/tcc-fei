@@ -1,26 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native';
+import { RectButton, TouchableHighlight } from 'react-native-gesture-handler';
 
 import TrucksModel, { Truck, CreateTruck } from '../../service/store/trucks';
 
-import { Container, TrucksList } from './styles';
+import { Container, TrucksList, Button } from './styles';
 import TruckItem from './TruckItem';
 
-const ListTrucks: React.FC = () => {
+interface ListTrucksI {
+  navigation: any;
+}
+
+const ListTrucks: React.FC<ListTrucksI> = ({ navigation }: ListTrucksI) => {
   const [trucks, setTrucks] = useState<Truck[]>([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     fetchTrucks();
   }, []);
 
   const fetchTrucks = async () => {
-    // await setNewTrucks();
+    // await deleteTrucks();
 
     const trucksFetched = await TrucksModel.findAll();
 
     console.log(trucksFetched);
 
     setTrucks(trucksFetched);
+  };
+
+  const handleRefresh = async () => {
+    setRefresh(true);
+
+    await fetchTrucks();
+
+    setRefresh(false);
   };
 
   const setNewTrucks = async () => {
@@ -42,6 +56,9 @@ const ListTrucks: React.FC = () => {
 
   return (
     <Container>
+      <Button onPress={() => navigation.push('AddTruck')}>
+        <Text>Criar Novo</Text>
+      </Button>
       <TrucksList
         data={trucks}
         keyExtractor={truck => truck.id}
@@ -50,7 +67,14 @@ const ListTrucks: React.FC = () => {
             Nenhum caminhão cadastrado
           </Text>
         }
-        renderItem={({ item }) => <TruckItem truck={item} />}
+        renderItem={({ item }) => (
+          <TruckItem
+            truck={item}
+            onPress={() => navigation.push('TruckSpeed', { truck: item })}
+          />
+        )}
+        refreshing={refresh}
+        onRefresh={handleRefresh}
       />
     </Container>
   );

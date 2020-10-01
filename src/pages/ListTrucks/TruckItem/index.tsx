@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+// import { View, Text } from 'react-native';
 
 import { Truck } from '../../../service/store/trucks';
 
@@ -15,14 +15,16 @@ interface ITruckItem {
   truck: Truck;
 }
 
-const TruckItem: React.FC = ({ truck }: ITruckItem) => {
+const TruckItem: React.FC<ITruckItem> = ({ truck, ...rest }: ITruckItem) => {
   return (
-    <Container>
+    <Container {...rest}>
       <TruckColor color="5D9CEC" />
       <TruckInfo>
         <TruckName>{truck.name}</TruckName>
         {'\n'}
-        <TruckSmall>45ton - 485</TruckSmall>
+        <TruckSmall>
+          {truck.weight}ton - {truck.coefficient}
+        </TruckSmall>
       </TruckInfo>
     </Container>
   );
