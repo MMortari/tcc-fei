@@ -5,16 +5,26 @@ class TrucksModel {
     return getData<Truck[]>(StorageTypes.TRUKS);
   }
 
-  async create(data: CreateTruck): Promise<any> {
+  async createMany(data: CreateTruck[]): Promise<any> {
+    return data.reduce((prev, truck) => {
+      return prev.then(() => {
+        return this.create(truck);
+      });
+    }, Promise.resolve());
+  }
+
+  async create(data: CreateTruck): Promise<Truck> {
     const old_data = await this.findAll();
 
     const new_id = parseInt(String(Date.now() + Math.random()), 10);
 
-    const inset_data = { ...data, id: new_id };
+    const inset_data: Truck = { ...data, id: new_id };
 
     const new_data = [...old_data, inset_data];
 
-    return setData(StorageTypes.TRUKS, new_data);
+    await setData(StorageTypes.TRUKS, new_data);
+
+    return inset_data;
   }
 
   async deleteAll(): Promise<any> {
@@ -25,10 +35,10 @@ class TrucksModel {
 export default new TrucksModel();
 
 export interface Truck {
-  id: string;
+  id: number;
   name: string;
   color?: string;
-  weight: string;
+  weight?: string;
   coefficient: string;
 }
 

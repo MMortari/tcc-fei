@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native';
-import { RectButton, TouchableHighlight } from 'react-native-gesture-handler';
 
 import TrucksModel, { Truck, CreateTruck } from '../../service/store/trucks';
 
-import { Container, TrucksList, Button } from './styles';
+import { Container, TrucksList, Subtitle, Button } from './styles';
 import TruckItem from './TruckItem';
 
 interface ListTrucksI {
@@ -20,11 +19,12 @@ const ListTrucks: React.FC<ListTrucksI> = ({ navigation }: ListTrucksI) => {
   }, []);
 
   const fetchTrucks = async () => {
-    // await deleteTrucks();
-
     const trucksFetched = await TrucksModel.findAll();
 
-    console.log(trucksFetched);
+    if (!trucksFetched.length) {
+      setNewTrucks();
+      return;
+    }
 
     setTrucks(trucksFetched);
   };
@@ -38,12 +38,46 @@ const ListTrucks: React.FC<ListTrucksI> = ({ navigation }: ListTrucksI) => {
   };
 
   const setNewTrucks = async () => {
-    const data: CreateTruck = {
-      name: 'Caminhao 4',
-      color: '5D9CEC',
-    };
+    const data: CreateTruck[] = [
+      {
+        name: 'Freightliner C120',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Mercedes Actros',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Mercedes Axor',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Mercedes Atron',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Mercedes Accelo',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Mercedes Atego',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Scania R440',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Scania R520',
+        coefficient: '0.7',
+      },
+      {
+        name: 'Scania P320',
+        coefficient: '0.7',
+      },
+    ];
 
-    await TrucksModel.create(data);
+    await TrucksModel.createMany(data);
 
     fetchTrucks();
   };
@@ -56,9 +90,10 @@ const ListTrucks: React.FC<ListTrucksI> = ({ navigation }: ListTrucksI) => {
 
   return (
     <Container>
-      <Button onPress={() => navigation.push('AddTruck')}>
+      {/* <Button onPress={() => deleteTrucks()}>
         <Text>Criar Novo</Text>
-      </Button>
+      </Button> */}
+      <Subtitle>Selecione o seu veículo: </Subtitle>
       <TrucksList
         data={trucks}
         keyExtractor={truck => truck.id}
@@ -70,7 +105,7 @@ const ListTrucks: React.FC<ListTrucksI> = ({ navigation }: ListTrucksI) => {
         renderItem={({ item }) => (
           <TruckItem
             truck={item}
-            onPress={() => navigation.push('TruckSpeed', { truck: item })}
+            onPress={() => navigation.push('TruckWeight', { truck: item })}
           />
         )}
         refreshing={refresh}

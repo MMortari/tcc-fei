@@ -1,14 +1,12 @@
 import React from 'react';
-import { Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useNavigation } from '@react-navigation/native';
-import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 
 // Pages
 import ListTrucks from '../pages/ListTrucks';
 import AddTruck from '../pages/AddTruck';
 import TruckSpeed from '../pages/TruckSpeed';
+import TruckWeight from '../pages/TruckWeight';
+import DestinyAddress from '../pages/DestinyAddress';
 
 const Truck = createStackNavigator();
 
@@ -25,16 +23,21 @@ const TruckRoutes: React.FC = () => {
         name="ListTrucks"
         component={ListTrucks}
         options={{
-          title: 'Meus Caminhões',
-          // headerRight: () => (
-          //   <IconFontAwesome
-          //     name="plus-circle"
-          //     onPress={() => console.log('Banana')}
-          //     color="#fff"
-          //     size={23}
-          //     style={{ marginRight: 25 }}
-          //   />
-          // ),
+          title: 'Biblioteca de Caminhões',
+        }}
+      />
+      <Truck.Screen
+        name="TruckWeight"
+        component={TruckWeight}
+        options={{
+          title: 'Insira a Carga do Veículo',
+        }}
+      />
+      <Truck.Screen
+        name="DestinyAddress"
+        component={DestinyAddress}
+        options={{
+          title: 'Insira o Endereço de Destino',
         }}
       />
       <Truck.Screen
